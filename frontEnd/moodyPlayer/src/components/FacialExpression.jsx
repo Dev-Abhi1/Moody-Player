@@ -8,7 +8,7 @@ export default function FacialExpression({ setSong }) {
   const videoRef = useRef(null);
   const [cameraActive, setCameraActive] = useState(false);
   const [modelsLoaded, setModelsLoaded] = useState(false);
-  const [isDetecting, setIsDetecting] = useState(false); // prevent double clicks
+  const [isDetecting, setIsDetecting] = useState(false); 
 
   const loadModels = async () => {
     const MODEL_URL = '/models';
@@ -54,16 +54,15 @@ export default function FacialExpression({ setSong }) {
   const detectMood = async () => {
     if (!videoRef.current || isDetecting || !cameraActive) return;
     setIsDetecting(true);
-    console.log("📸 Running mood detection...");
+
 
     const detections = await faceapi
       .detectAllFaces(videoRef.current, new faceapi.TinyFaceDetectorOptions())
       .withFaceExpressions();
 
-    console.log("🔍 Detections:", detections);
+ 
 
     if (!detections || detections.length === 0 || !detections[0].expressions) {
-      console.log("😶 No face or expressions detected");
       setIsDetecting(false);
       return;
     }
@@ -78,14 +77,14 @@ export default function FacialExpression({ setSong }) {
       }
     }
 
-    console.log("🧠 Detected mood:", detectedMood);
+  
 
     try {
       const result = await axios.get(`http://localhost:3000/songs?mood=${detectedMood}`);
       console.log("🎵 Songs received:", result.data.songs);
       setSong(result.data.songs);
     } catch (err) {
-      console.error("❌ Error fetching songs:", err);
+   
     }
 
     stopCamera();
